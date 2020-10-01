@@ -1,0 +1,1 @@
+match (u:User {id:$1})-[:Has]->(t:Task) return t
