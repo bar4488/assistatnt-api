@@ -1,15 +1,36 @@
 import { Task } from '@/model/task';
-import { Controller, Get } from '@nestjs/common';
-import { Ping } from '../model/ping';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Ping } from './model/ping';
 import { PingService } from './ping.service';
 
-@Controller('ping')
+@Controller('pings')
 export class PingController {
     constructor(private readonly pingService: PingService) {}
 
-    @Get('pings')
-    async findAll(): Promise<Task[]> {
-        const t: Task[] = await this.pingService.getUserPings(1)
+    @Get()
+    async findAll(): Promise<Ping[]> {
+        const t: Ping[] = await this.pingService.getUserPings(1)
+        console.log(t)
+        return t
+    }
+    
+    @Post()
+    async createPing(@Body() ping: Ping): Promise<Ping> {
+        const t: Ping = await this.pingService.createPing(1, ping);
+        console.log(t)
+        return t
+    }
+
+    @Delete(":id")
+    async deletePing(@Param("id") pingId: string): Promise<Ping> {
+        const t: Ping = await this.pingService.deletePing(pingId);
+        console.log(t)
+        return t
+    }
+
+    @Put(":id")
+    async updatePing(@Param("id") pingId: string, @Body() ping: Ping): Promise<Ping> {
+        const t: Ping = await this.pingService.updatePing(ping);
         console.log(t)
         return t
     }

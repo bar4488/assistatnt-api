@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   HttpException,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -75,7 +76,7 @@ export class BooksController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<string> {
     // save file name in neo4j
-    if(file == null) throw new HttpException("must provide an image", 400);
+    if(file == null) throw new HttpException("must provide an image", HttpStatus.BAD_REQUEST);
     await this.booksService.updateBook(bookId, { imagePath: file.filename });
     return file.filename;
   }
