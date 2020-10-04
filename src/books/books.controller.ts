@@ -1,46 +1,58 @@
-import { Task } from '@/model/task';
+import { multerOptions } from '@/utils/image_upload';
 import {
   Body,
   Controller,
   Get,
+  HttpException,
   Param,
   ParseUUIDPipe,
   Patch,
   Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { BooksService } from './books.service';
-import { UserBook as Book } from './model/book copy';
-import { BookInfo } from './model/book_info';
+import { UserBook as Book } from './model/book';
+import { BookCreateInfo, BookInfo, BookInfoOptional } from './model/book_info';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  async getAllUserBooks(): Promise<Book[]> {
-    const t: Book[] = await this.booksService.getUserBooks(1);
-    console.log(t);
-    return t;
+  async getAllUserBooks(@Query('hidden') hidden: boolean): Promise<Book[]> {
+    if (hidden) {
+      return await this.booksService.getUserHiddenBooks(1);
+    } else {
+      return await this.booksService.getUserBooks(1);
+    }
   }
 
-  @Get('hidden')
-  async getUserHiddenBooks(): Promise<Book[]> {
-    const t: Book[] = await this.booksService.getUserHiddenBooks(1);
-    console.log(t);
-    return t;
-  }
-
-  @Patch('id/:bookId')
+  @Put(':bookId')
   async updateBook(
     @Param('bookId', new ParseUUIDPipe()) bookId: string,
-    @Body() book: BookInfo,
+    @Body() book: BookCreateInfo,
   ): Promise<Book> {
     const t: Book = await this.booksService.updateBook(bookId, book);
     console.log(t);
     return t;
   }
 
-  @Get('id/:bookId')
+  @Patch(':bookId')
+  async updateBookPart(
+    @Param('bookId', new ParseUUIDPipe()) bookId: string,
+    @Body() book: BookInfoOptional,
+  ): Promise<Book> {
+    const t: Book = await this.booksService.updateBook(bookId, book);
+    console.log(t);
+    return t;
+  }
+
+  @Get(':bookId')
   async getBook(
     @Param('bookId', new ParseUUIDPipe()) bookId: string,
   ): Promise<Book> {
@@ -50,9 +62,21 @@ export class BooksController {
   }
 
   @Post()
-  async createBook(@Body() book: BookInfo): Promise<Book> {
+  async createBook(@Body() book: BookCreateInfo): Promise<Book> {
     const t: Book = await this.booksService.createBook(1, book);
     console.log(t);
     return t;
+  }
+
+  @Post(':bookId/image')
+  @UseInterceptors(FileInterceptor('image', multerOptions))
+  async uploadBookImage(
+    @Param('bookId') bookId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<string> {
+    // save file name in neo4j
+    if(file == null) throw new HttpException("must provide an image", 400);
+    await this.booksService.updateBook(bookId, { imagePath: file.filename });
+    return file.filename;
   }
 }

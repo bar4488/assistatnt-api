@@ -10,8 +10,8 @@ import {
   InjectPersistenceManager,
 } from '@liberation-data/drivine/DrivineInjectionDecorators';
 import { Injectable } from '@nestjs/common';
-import { UserBook as Book } from './model/book copy';
-import { BookInfo } from './model/book_info';
+import { UserBook as Book } from './model/book';
+import { BookInfo, BookInfoOptional } from './model/book_info';
 
 @Injectable()
 export class BooksService {
@@ -67,14 +67,12 @@ export class BooksService {
     };
     console.log(params);
     return this.persistenceManager.execute(
-      new QuerySpecification()
-        .withStatement(this.deleteBookStmt)
-        .bind(params)
+      new QuerySpecification().withStatement(this.deleteBookStmt).bind(params),
     );
   }
 
   @Transactional()
-  public async updateBook(bookId: string, book: BookInfo): Promise<Book> {
+  public async updateBook(bookId: string, book: BookInfoOptional): Promise<Book> {
     const params = {
       bookId,
       book,

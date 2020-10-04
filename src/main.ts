@@ -2,6 +2,8 @@ import { AppModule } from './app.module';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import * as express from 'express';
+import { join } from 'path';
 
 dotenv.config();
 const logger = new Logger('main');
@@ -17,6 +19,9 @@ export async function configureApp(app: INestApplication): Promise<void> {
             whitelist: true
         })
     );
+
+    app.use('/files', express.static(join(__dirname, '..', 'files'))); // <-
+
 
     app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 

@@ -10,7 +10,7 @@ import {
 } from '@liberation-data/drivine/DrivineInjectionDecorators';
 import { Injectable } from '@nestjs/common';
 import { Session } from './model/session';
-import { SessionInfo } from './model/session_info';
+import { SessionInfo, SessionInfoOptional } from './model/session_info';
 
 @Injectable()
 export class SessionsService {
@@ -63,7 +63,7 @@ export class SessionsService {
   @Transactional()
   public async updateSession(
     sessionId: string,
-    session: SessionInfo,
+    session: SessionInfoOptional,
   ): Promise<Session | undefined> {
     const params = {
       sessionId,

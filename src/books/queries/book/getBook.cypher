@@ -1,3 +1,3 @@
-match 
-    (b:Book {id: $bookId}) 
-return b
+match (b:Book {id: $bookId}) 
+optional match (b)-[:Has]->(d) 
+return b{.*, currentPage:sum(d.pagesRead)}

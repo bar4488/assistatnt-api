@@ -4,4 +4,5 @@ where
     b.hidden is null 
     or 
     b.hidden <> true 
-return b
+optional match (b)-[:Has]->(d) 
+return b{.*, currentPage:sum(d.pagesRead)}

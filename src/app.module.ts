@@ -8,11 +8,15 @@ import {
 import { DatabaseRegistry } from '@liberation-data/drivine/connection/DatabaseRegistry';
 import { TasksModule } from './tasks/tasks.module';
 import { BooksModule } from './books/books.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     DrivineModule.withOptions(<DrivineModuleOptions>{
       connectionProviders: [DatabaseRegistry.buildOrResolveFromEnv()],
+    }),
+    MulterModule.register({
+      dest: './files',
     }),
     PlannerModule,
     PingModule,

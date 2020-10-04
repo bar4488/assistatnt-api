@@ -1,16 +1,17 @@
 import {
   IsInt,
   IsNumber,
+  IsOptional,
 } from 'class-validator';
 
 export class SessionInfo {
-  @IsNumber() readonly startDate: number;
+  @IsInt() readonly startDate: number;
   @IsInt() readonly durationSeconds: number; // in seconds
   @IsInt() readonly pagesRead: number;
+}
 
-  constructor(startDate: number, durationSeconds: number, pagesRead: number) {
-    this.startDate = startDate;
-    this.durationSeconds = durationSeconds;
-    this.pagesRead = pagesRead;
-  }
+export class SessionInfoOptional {
+  @IsNumber() @IsOptional() readonly startDate?: number;
+  @IsInt() @IsOptional() readonly durationSeconds?: number; // in seconds
+  @IsInt() @IsOptional() readonly pagesRead?: number;
 }

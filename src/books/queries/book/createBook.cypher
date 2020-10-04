@@ -4,7 +4,6 @@ match (u:User {
     id: apoc.create.uuid(), 
     name: $name, 
     writer: $writer, 
-    imagePath: $imagePath, 
     pageCount: $pageCount
 }), (u)-[:Reading]->(b)
 return b

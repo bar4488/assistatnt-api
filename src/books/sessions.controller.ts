@@ -7,12 +7,13 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { Session } from './model/session';
-import { SessionInfo } from './model/session_info';
+import { SessionInfo, SessionInfoOptional } from './model/session_info';
 import { SessionsService } from './sessions.service';
 
-@Controller('books/id/:id/sessions')
+@Controller('books/:id/sessions')
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
@@ -23,7 +24,7 @@ export class SessionsController {
     return this.sessionsService.getBookSessions(bookId);
   }
 
-  @Patch('id/:sessionId')
+  @Put(':sessionId')
   async updateSession(
     @Param('sessionId', new ParseUUIDPipe()) sessionId: string,
     @Body() session: SessionInfo,
@@ -36,14 +37,27 @@ export class SessionsController {
     return t;
   }
 
-  @Delete('id/:sessionId')
+  @Patch(':sessionId')
+  async updateSessionPart(
+    @Param('sessionId', new ParseUUIDPipe()) sessionId: string,
+    @Body() session: SessionInfoOptional,
+  ): Promise<Session | undefined> {
+    const t: Session | undefined = await this.sessionsService.updateSession(
+      sessionId,
+      session,
+    );
+    console.log(t);
+    return t;
+  }
+
+  @Delete(':sessionId')
   async deleteSession(
     @Param('sessionId', new ParseUUIDPipe()) sessionId: string,
   ): Promise<void> {
     await this.sessionsService.deleteSession(sessionId);
   }
 
-  @Get('id/:sessionId')
+  @Get(':sessionId')
   async getSession(
     @Param('sessionId', new ParseUUIDPipe()) sessionId: string,
   ): Promise<Session | undefined> {
