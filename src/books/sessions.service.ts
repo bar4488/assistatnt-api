@@ -9,6 +9,7 @@ import {
   InjectPersistenceManager,
 } from '@liberation-data/drivine/DrivineInjectionDecorators';
 import { Injectable } from '@nestjs/common';
+import { v4 } from 'uuid';
 import { Session } from './model/session';
 import { SessionInfo, SessionInfoOptional } from './model/session_info';
 
@@ -33,8 +34,10 @@ export class SessionsService {
     bookId: string,
     session: SessionInfo,
   ): Promise<Session | undefined> {
+    const sessionId = session.id ?? v4();
     const params = {
       bookId,
+      sessionId,
       ...session,
     };
     console.log(params);

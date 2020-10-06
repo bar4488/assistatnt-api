@@ -10,6 +10,7 @@ import {
   InjectPersistenceManager,
 } from '@liberation-data/drivine/DrivineInjectionDecorators';
 import { Injectable } from '@nestjs/common';
+import * as uuid from 'uuid';
 import { UserBook as Book } from './model/book';
 import { BookInfo, BookInfoOptional } from './model/book_info';
 
@@ -33,8 +34,10 @@ export class BooksService {
 
   @Transactional()
   public async createBook(userId: number, book: BookInfo): Promise<Book> {
+    const bookId = book.id ?? uuid.v1();
     const params = {
       userId,
+      bookId,
       ...book,
     };
     console.log(params);

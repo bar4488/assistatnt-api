@@ -1,7 +1,7 @@
 match (u:User {
     id:$userId
 }) create (b:Book {
-    id: apoc.create.uuid(), 
+    id: $bookId, 
     name: $name, 
     writer: $writer, 
     pageCount: $pageCount

@@ -1,7 +1,7 @@
 match (b:Book {
     id:$bookId
 }) create (s:Session {
-    id: apoc.create.uuid(), 
+    id: $sessionId, 
     startDate: $startDate,
     durationSeconds: $durationSeconds,
     pagesRead: $pagesRead

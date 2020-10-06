@@ -2,9 +2,11 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
 export class BookCreateInfo {
+  @IsOptional() @IsUUID() readonly id?: string;
   @IsString() readonly name: string;
   @IsString() readonly writer: string;
   @IsInt() readonly pageCount: number;
@@ -18,6 +20,7 @@ export class BookInfoOptional {
 }
 
 export class BookInfo {
+  @IsOptional() @IsUUID() id?: string;
   @IsString() readonly name: string;
   @IsString() readonly writer: string;
   @IsInt() readonly pageCount: number;
