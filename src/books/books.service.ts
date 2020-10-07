@@ -64,7 +64,7 @@ export class BooksService {
   }
 
   @Transactional()
-  public async deleteBook(userId: number, bookId: string): Promise<void> {
+  public async deleteBook(bookId: string): Promise<void> {
     const params = {
       bookId,
     };

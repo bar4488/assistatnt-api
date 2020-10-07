@@ -2,6 +2,7 @@ import { multerOptions } from '@/utils/image_upload';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -41,6 +42,13 @@ export class BooksController {
     const t: Book = await this.booksService.updateBook(bookId, book);
     console.log(t);
     return t;
+  }
+
+  @Delete(':bookId')
+  async deleteBook(
+    @Param('bookId', new ParseUUIDPipe()) bookId: string,
+  ): Promise<void> {
+    return this.booksService.deleteBook(bookId);
   }
 
   @Patch(':bookId')
