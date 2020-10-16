@@ -16,7 +16,7 @@ import { MulterModule } from '@nestjs/platform-express';
       connectionProviders: [DatabaseRegistry.buildOrResolveFromEnv()],
     }),
     MulterModule.register({
-      dest: './files',
+      dest: process.env.UPLOAD_LOCATION || './files',
     }),
     PlannerModule,
     PingModule,
